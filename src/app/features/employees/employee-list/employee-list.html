@@ -1,0 +1,102 @@
+<section class="page">
+  <div class="page-header">
+    <div>
+      <h2>Employees</h2>
+      <p>Browse employee records loaded from the API.</p>
+    </div>
+
+    <button mat-flat-button type="button" (click)="addEmployee()">
+      <mat-icon>add</mat-icon>
+      Add Employee
+    </button>
+  </div>
+
+  <mat-form-field class="search" appearance="outline" subscriptSizing="dynamic">
+    <mat-label>Search by Employee ID</mat-label>
+    <mat-icon matIconPrefix>search</mat-icon>
+    <input
+      matInput
+      type="search"
+      inputmode="numeric"
+      autocomplete="off"
+      [value]="searchId()"
+      (input)="onSearch($event)"
+      (keydown)="onSearchKeydown($event)"
+    />
+  </mat-form-field>
+
+  @if (loading()) {
+    <div class="state state-loading" role="status" aria-live="polite">
+      <mat-spinner diameter="40"></mat-spinner>
+      <p>Loading employees...</p>
+    </div>
+  } @else if (errorMessage()) {
+    <div class="state state-error" role="alert">
+      <mat-icon>error</mat-icon>
+      <p>{{ errorMessage() }}</p>
+      <button mat-stroked-button type="button" (click)="loadEmployees()">Try again</button>
+    </div>
+  } @else if (showNotFound()) {
+    <div class="state state-empty" role="status">
+      <mat-icon>search_off</mat-icon>
+      <p>No employee found with ID "{{ searchId().trim() }}".</p>
+    </div>
+  } @else if (showEmpty()) {
+    <div class="state state-empty" role="status">
+      <mat-icon>inbox</mat-icon>
+      <p>No employees available.</p>
+    </div>
+  } @else {
+    <div class="table-scroll">
+      <table mat-table [dataSource]="filteredEmployees()" aria-label="Employees">
+        <ng-container matColumnDef="name">
+          <th mat-header-cell *matHeaderCellDef>Name</th>
+          <td mat-cell *matCellDef="let employee">{{ employee.name }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="email">
+          <th mat-header-cell *matHeaderCellDef>Email</th>
+          <td mat-cell *matCellDef="let employee">{{ employee.email }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="mobile">
+          <th mat-header-cell *matHeaderCellDef>Mobile</th>
+          <td mat-cell *matCellDef="let employee">{{ employee.mobile }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="country">
+          <th mat-header-cell *matHeaderCellDef>Country</th>
+          <td mat-cell *matCellDef="let employee">{{ employee.country }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="actions">
+          <th mat-header-cell *matHeaderCellDef>Actions</th>
+          <td mat-cell *matCellDef="let employee">
+            <div class="actions">
+              <button
+                mat-icon-button
+                type="button"
+                attr.aria-label="Edit {{ employee.name }}"
+                (click)="editEmployee(employee)"
+              >
+                <mat-icon>edit</mat-icon>
+              </button>
+              <button
+                mat-icon-button
+                type="button"
+                class="delete-button"
+                attr.aria-label="Delete {{ employee.name }}"
+                (click)="deleteEmployee(employee)"
+              >
+                <mat-icon>delete</mat-icon>
+              </button>
+            </div>
+          </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+      </table>
+    </div>
+  }
+</section>
