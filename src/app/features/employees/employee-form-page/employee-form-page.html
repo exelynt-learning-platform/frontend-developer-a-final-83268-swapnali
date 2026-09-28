@@ -1,0 +1,47 @@
+<section class="page">
+  <div class="page-header">
+    <div>
+      <a mat-button type="button" routerLink="/employees">
+        <mat-icon>arrow_back</mat-icon>
+        Back to list
+      </a>
+      <h2>{{ isEditMode() ? 'Edit Employee' : 'Add Employee' }}</h2>
+      <p>
+        {{
+          isEditMode()
+            ? 'Update the employee details and save your changes.'
+            : 'Fill in the details to create a new employee.'
+        }}
+      </p>
+    </div>
+  </div>
+
+  @let countriesLoading = countriesLoading$ | async;
+  @let employeeLoading = employeeLoading$ | async;
+  @let countries = countries$ | async;
+  @let employee = employee$ | async;
+
+  @if (loadFailed()) {
+    <div class="state state-error" role="alert">
+      <mat-icon>error</mat-icon>
+      <p>Unable to load this employee.</p>
+      <a mat-stroked-button routerLink="/employees">Back to list</a>
+    </div>
+  } @else if ((isEditMode() && employeeLoading && !employee) || (countriesLoading && !(countries?.length))) {
+    <div class="state state-loading" role="status" aria-live="polite">
+      <mat-spinner diameter="40"></mat-spinner>
+      <p>Loading form...</p>
+    </div>
+  } @else {
+    <div class="form-card">
+      <app-employee-form
+        [employee]="isEditMode() ? employee : null"
+        [countries]="countries ?? []"
+        [submitting]="submitting()"
+        [submitLabel]="isEditMode() ? 'Update Employee' : 'Add Employee'"
+        (formSubmit)="onSubmit($event)"
+        (cancelled)="onCancel()"
+      />
+    </div>
+  }
+</section>

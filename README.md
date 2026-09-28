@@ -42,6 +42,8 @@ npm run api:reset
 
 Data files live in `mock/db.json` (runtime) and `mock/db.seed.json` (reset source).
 
+New employees get the next serial ID (`7`, `8`, …) from `mock/server.js` (not random ids).
+
 ## Building
 
 ```bash

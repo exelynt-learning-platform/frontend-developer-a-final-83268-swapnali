@@ -33,6 +33,9 @@ export const selectSelectedEmployee = createSelector(
   (entities, selectedId) => (selectedId ? (entities[selectedId] ?? null) : null),
 );
 
+export const selectEmployeeById = (id: string) =>
+  createSelector(selectEmployeeEntities, (entities) => entities[id] ?? null);
+
 export const selectEmployeeLoaded = createSelector(selectEmployeeState, (state) => state.loaded);
 
 export const selectSearchNotFound = createSelector(

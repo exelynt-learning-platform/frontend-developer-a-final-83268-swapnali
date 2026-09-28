@@ -5,7 +5,7 @@
     "ng": "ng",
     "start": "concurrently -k -n api,web -c blue,green \"npm run api\" \"ng serve\"",
     "start:web": "ng serve",
-    "api": "json-server --watch mock/db.json --routes mock/routes.json --port 3000 --delay 300",
+    "api": "node mock/server.js",
     "api:reset": "node -e \"require('fs').copyFileSync('mock/db.seed.json','mock/db.json'); console.log('Mock DB reset from db.seed.json')\"",
     "build": "ng build",
     "watch": "ng build --watch --configuration development",

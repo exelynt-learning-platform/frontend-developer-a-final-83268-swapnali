@@ -1,0 +1,76 @@
+<form class="employee-form" [formGroup]="form" (ngSubmit)="onSubmit()" novalidate>
+  <div class="fields">
+    <mat-form-field appearance="outline">
+      <mat-label>Name</mat-label>
+      <input matInput formControlName="name" autocomplete="name" maxlength="50" />
+      @if (controlError('name'); as message) {
+        <mat-error>{{ message }}</mat-error>
+      }
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Email</mat-label>
+      <input matInput type="email" formControlName="email" autocomplete="email" maxlength="100" />
+      @if (controlError('email'); as message) {
+        <mat-error>{{ message }}</mat-error>
+      }
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Mobile</mat-label>
+      <input
+        matInput
+        type="tel"
+        formControlName="mobile"
+        inputmode="numeric"
+        autocomplete="tel"
+        maxlength="15"
+      />
+      @if (controlError('mobile'); as message) {
+        <mat-error>{{ message }}</mat-error>
+      }
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Country</mat-label>
+      <mat-select formControlName="country">
+        @for (country of countries(); track country.id) {
+          <mat-option [value]="country.country">{{ country.country }}</mat-option>
+        }
+      </mat-select>
+      @if (controlError('country'); as message) {
+        <mat-error>{{ message }}</mat-error>
+      }
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>State</mat-label>
+      <input matInput formControlName="state" maxlength="50" />
+      @if (controlError('state'); as message) {
+        <mat-error>{{ message }}</mat-error>
+      }
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>District</mat-label>
+      <input matInput formControlName="district" maxlength="50" />
+      @if (controlError('district'); as message) {
+        <mat-error>{{ message }}</mat-error>
+      }
+    </mat-form-field>
+  </div>
+
+  <div class="actions">
+    <button mat-stroked-button type="button" [disabled]="submitting()" (click)="onCancel()">
+      Cancel
+    </button>
+    <button mat-flat-button type="submit" [disabled]="submitting()">
+      @if (submitting()) {
+        <mat-spinner diameter="20"></mat-spinner>
+        Saving...
+      } @else {
+        {{ submitLabel() }}
+      }
+    </button>
+  </div>
+</form>

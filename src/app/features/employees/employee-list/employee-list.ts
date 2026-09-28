@@ -9,6 +9,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatTableModule } from '@angular/material/table';
+import { Router } from '@angular/router';
 import { Actions, ofType } from '@ngrx/effects';
 import { Store } from '@ngrx/store';
 import { filter } from 'rxjs';
@@ -47,6 +48,7 @@ export class EmployeeList implements OnInit {
   private readonly actions$ = inject(Actions);
   private readonly snackBar = inject(MatSnackBar);
   private readonly dialog = inject(MatDialog);
+  private readonly router = inject(Router);
 
   readonly displayedColumns = ['employeeId', 'name', 'email', 'mobile', 'country', 'actions'];
 
@@ -120,12 +122,12 @@ export class EmployeeList implements OnInit {
   }
 
   addEmployee(): void {
-    this.snackBar.open('Add employee is not available yet.', 'Close', { duration: 3000 });
+    void this.router.navigate(['/employees/new']);
   }
 
   editEmployee(employee: Employee): void {
     this.store.dispatch(EmployeeActions.selectEmployee({ id: employee.id }));
-    this.snackBar.open(`Edit ${employee.name} is not available yet.`, 'Close', { duration: 3000 });
+    void this.router.navigate(['/employees', employee.id, 'edit']);
   }
 
   deleteEmployee(employee: Employee): void {

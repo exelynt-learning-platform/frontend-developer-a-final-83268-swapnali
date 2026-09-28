@@ -1,0 +1,36 @@
+.employee-form {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.fields {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 4px 16px;
+}
+
+@media (min-width: 768px) {
+  .fields {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+mat-form-field {
+  width: 100%;
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 12px;
+  margin-top: 8px;
+}
+
+button[type='submit'] {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 120px;
+}

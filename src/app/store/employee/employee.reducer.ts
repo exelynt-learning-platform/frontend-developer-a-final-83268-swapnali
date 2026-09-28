@@ -43,12 +43,11 @@ export const employeeReducer = createReducer(
     loaded: false,
   })),
 
-  on(EmployeeActions.loadEmployeeById, (state, { id }) => ({
+  on(EmployeeActions.loadEmployeeById, (state) => ({
     ...state,
     loading: true,
     error: null,
     searchNotFound: false,
-    searchId: id,
   })),
   on(EmployeeActions.loadEmployeeByIdSuccess, (state, { employee }) =>
     employeeAdapter.upsertOne(employee, {
