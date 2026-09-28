@@ -1,0 +1,138 @@
+{
+  "employee": [
+    {
+      "id": "1",
+      "name": "Nilesh Wankhede",
+      "email": "wankhedenilesh2025@gmail.com",
+      "emailId": "nilesh.wankhede@example.com",
+      "mobile": "9386782653",
+      "country": "India",
+      "state": "MH",
+      "district": "Pune",
+      "avatar": "https://avatars.githubusercontent.com/u/31262175",
+      "createdAt": "2026-09-27T08:45:39.547Z"
+    },
+    {
+      "id": "2",
+      "name": "Anika Sharma",
+      "email": "anika.sharma@example.com",
+      "emailId": "anika.sharma@example.com",
+      "mobile": "9876543210",
+      "country": "India",
+      "state": "KA",
+      "district": "Bengaluru",
+      "avatar": "https://i.pravatar.cc/150?img=5",
+      "createdAt": "2026-09-27T09:00:00.000Z"
+    },
+    {
+      "id": "3",
+      "name": "Liam Johnson",
+      "email": "liam.johnson@example.com",
+      "emailId": "liam.johnson@example.com",
+      "mobile": "4155550134",
+      "country": "United States",
+      "state": "CA",
+      "district": "San Francisco",
+      "avatar": "https://i.pravatar.cc/150?img=12",
+      "createdAt": "2026-09-27T09:15:00.000Z"
+    },
+    {
+      "id": "4",
+      "name": "Sofia Mueller",
+      "email": "sofia.mueller@example.com",
+      "emailId": "sofia.mueller@example.com",
+      "mobile": "15123456789",
+      "country": "Germany",
+      "state": "BY",
+      "district": "Munich",
+      "avatar": "https://i.pravatar.cc/150?img=9",
+      "createdAt": "2026-09-27T09:30:00.000Z"
+    },
+    {
+      "id": "5",
+      "name": "Noah Williams",
+      "email": "noah.williams@example.com",
+      "emailId": "noah.williams@example.com",
+      "mobile": "2079460123",
+      "country": "United Kingdom",
+      "state": "ENG",
+      "district": "London",
+      "avatar": "https://i.pravatar.cc/150?img=15",
+      "createdAt": "2026-09-27T09:45:00.000Z"
+    },
+    {
+      "id": "6",
+      "name": "Emma Brown",
+      "email": "emma.brown@example.com",
+      "emailId": "emma.brown@example.com",
+      "mobile": "4165550198",
+      "country": "Canada",
+      "state": "ON",
+      "district": "Toronto",
+      "avatar": "https://i.pravatar.cc/150?img=20",
+      "createdAt": "2026-09-27T10:00:00.000Z"
+    }
+  ],
+  "country": [
+    {
+      "id": "1",
+      "country": "India",
+      "flag": "https://flagcdn.com/w80/in.png",
+      "createdAt": "2026-01-01T00:00:00.000Z"
+    },
+    {
+      "id": "2",
+      "country": "United States",
+      "flag": "https://flagcdn.com/w80/us.png",
+      "createdAt": "2026-01-01T00:00:00.000Z"
+    },
+    {
+      "id": "3",
+      "country": "United Kingdom",
+      "flag": "https://flagcdn.com/w80/gb.png",
+      "createdAt": "2026-01-01T00:00:00.000Z"
+    },
+    {
+      "id": "4",
+      "country": "Germany",
+      "flag": "https://flagcdn.com/w80/de.png",
+      "createdAt": "2026-01-01T00:00:00.000Z"
+    },
+    {
+      "id": "5",
+      "country": "Canada",
+      "flag": "https://flagcdn.com/w80/ca.png",
+      "createdAt": "2026-01-01T00:00:00.000Z"
+    },
+    {
+      "id": "6",
+      "country": "Australia",
+      "flag": "https://flagcdn.com/w80/au.png",
+      "createdAt": "2026-01-01T00:00:00.000Z"
+    },
+    {
+      "id": "7",
+      "country": "France",
+      "flag": "https://flagcdn.com/w80/fr.png",
+      "createdAt": "2026-01-01T00:00:00.000Z"
+    },
+    {
+      "id": "8",
+      "country": "Japan",
+      "flag": "https://flagcdn.com/w80/jp.png",
+      "createdAt": "2026-01-01T00:00:00.000Z"
+    },
+    {
+      "id": "9",
+      "country": "Singapore",
+      "flag": "https://flagcdn.com/w80/sg.png",
+      "createdAt": "2026-01-01T00:00:00.000Z"
+    },
+    {
+      "id": "10",
+      "country": "United Arab Emirates",
+      "flag": "https://flagcdn.com/w80/ae.png",
+      "createdAt": "2026-01-01T00:00:00.000Z"
+    }
+  ]
+}

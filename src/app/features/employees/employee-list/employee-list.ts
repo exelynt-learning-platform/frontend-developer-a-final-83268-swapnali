@@ -1,19 +1,38 @@
-import { Component, OnInit, computed, inject, signal } from '@angular/core';
+import { AsyncPipe } from '@angular/common';
+import { Component, OnInit, inject, signal } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { MatButtonModule } from '@angular/material/button';
+import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatTableModule } from '@angular/material/table';
-import { finalize } from 'rxjs';
+import { Actions, ofType } from '@ngrx/effects';
+import { Store } from '@ngrx/store';
+import { filter } from 'rxjs';
 import { Employee } from '../../../core/models/employee';
-import { EmployeeService } from '../../../core/services/employee';
+import {
+  ConfirmDialog,
+  ConfirmDialogData,
+} from '../../../shared/confirm-dialog/confirm-dialog';
+import { CountryActions } from '../../../store/country/country.actions';
+import { EmployeeActions } from '../../../store/employee/employee.actions';
+import {
+  selectEmployeeError,
+  selectEmployeeLoading,
+  selectFilteredEmployees,
+  selectShowEmployeeNotFound,
+  selectShowEmployeesEmpty,
+} from '../../../store/employee/employee.selectors';
 
 @Component({
   imports: [
+    AsyncPipe,
     MatTableModule,
     MatButtonModule,
+    MatDialogModule,
     MatIconModule,
     MatFormFieldModule,
     MatInputModule,
@@ -24,103 +43,43 @@ import { EmployeeService } from '../../../core/services/employee';
   templateUrl: './employee-list.html',
 })
 export class EmployeeList implements OnInit {
-  private readonly employeeService = inject(EmployeeService);
+  private readonly store = inject(Store);
+  private readonly actions$ = inject(Actions);
   private readonly snackBar = inject(MatSnackBar);
+  private readonly dialog = inject(MatDialog);
 
-  readonly displayedColumns = ['name', 'email', 'mobile', 'country', 'actions'];
+  readonly displayedColumns = ['employeeId', 'name', 'email', 'mobile', 'country', 'actions'];
 
-  /** Full list from GET /employee (source of truth for the table). */
-  private readonly employees = signal<Employee[]>([]);
+  /** Local input value — avoids fighting the store via [value] + async pipe. */
   readonly searchId = signal('');
-  readonly loading = signal(false);
-  readonly errorMessage = signal<string | null>(null);
 
-  /**
-   * Table data: either the full list, or rows whose id contains the search text.
-   * Typing filters locally; pressing Enter runs an exact API lookup via getEmployeeById.
-   */
-  readonly filteredEmployees = computed(() => {
-    const query = this.searchId().trim();
-    const employees = this.employees();
+  readonly employees$ = this.store.select(selectFilteredEmployees);
+  readonly loading$ = this.store.select(selectEmployeeLoading);
+  readonly error$ = this.store.select(selectEmployeeError);
+  readonly showNotFound$ = this.store.select(selectShowEmployeeNotFound);
+  readonly showEmpty$ = this.store.select(selectShowEmployeesEmpty);
 
-    if (!query) {
-      return employees;
-    }
+  constructor() {
+    this.actions$
+      .pipe(ofType(EmployeeActions.deleteEmployeeSuccess), takeUntilDestroyed())
+      .subscribe(({ name }) => {
+        this.snackBar.open(`${name} was removed.`, 'Close', { duration: 3000 });
+      });
 
-    return employees.filter((employee) => employee.id.includes(query));
-  });
-
-  /** Search text is set, but no employee id matches. */
-  readonly showNotFound = computed(
-    () =>
-      this.searchId().trim() !== '' &&
-      this.filteredEmployees().length === 0 &&
-      !this.loading() &&
-      this.errorMessage() === null,
-  );
-
-  /** API succeeded and the employee collection is empty. */
-  readonly showEmpty = computed(
-    () =>
-      this.searchId().trim() === '' &&
-      this.employees().length === 0 &&
-      !this.loading() &&
-      this.errorMessage() === null,
-  );
+    this.actions$
+      .pipe(ofType(EmployeeActions.deleteEmployeeFailure), takeUntilDestroyed())
+      .subscribe(({ error }) => {
+        this.snackBar.open(error, 'Close', { duration: 4000 });
+      });
+  }
 
   ngOnInit(): void {
-    this.loadEmployees();
+    this.store.dispatch(EmployeeActions.loadEmployees());
+    this.store.dispatch(CountryActions.loadCountries());
   }
 
-  /**
-   * Fetches all employees.
-   * Flow: EmployeeService.getEmployees() → HttpClient GET → Observable → subscribe → employees signal → template.
-   */
   loadEmployees(): void {
-    this.loading.set(true);
-    this.errorMessage.set(null);
-
-    this.employeeService
-      .getEmployees()
-      .pipe(finalize(() => this.loading.set(false)))
-      .subscribe({
-        next: (employees) => this.employees.set(employees),
-        error: (error: Error) => {
-          this.employees.set([]);
-          this.errorMessage.set(error.message || 'Failed to load employees.');
-        },
-      });
-  }
-
-  /**
-   * Exact ID search using GET /employee/:id (triggered by Enter).
-   * 404-style failures surface as the not-found state.
-   */
-  searchById(): void {
-    const id = this.searchId().trim();
-
-    if (!id) {
-      this.loadEmployees();
-      return;
-    }
-
-    this.loading.set(true);
-    this.errorMessage.set(null);
-
-    this.employeeService
-      .getEmployeeById(id)
-      .pipe(finalize(() => this.loading.set(false)))
-      .subscribe({
-        next: (employee) => this.employees.set([employee]),
-        error: (error: Error) => {
-          this.employees.set([]);
-          if (error.message.includes('404')) {
-            // Leave errorMessage null so showNotFound() can display.
-            return;
-          }
-          this.errorMessage.set(error.message || 'Failed to search employee.');
-        },
-      });
+    this.store.dispatch(EmployeeActions.loadEmployees());
   }
 
   onSearch(event: Event): void {
@@ -129,13 +88,28 @@ export class EmployeeList implements OnInit {
       return;
     }
 
-    const previous = this.searchId();
-    this.searchId.set(input.value);
+    const value = input.value;
+    this.searchId.set(value);
+    this.store.dispatch(EmployeeActions.setSearchId({ searchId: value }));
+  }
 
-    // After an Enter-key exact search, clearing the box restores the full list.
-    if (previous.trim() !== '' && input.value.trim() === '') {
+  /** Exact ID lookup (Search button or Enter). */
+  searchById(): void {
+    const id = this.searchId().trim();
+    this.store.dispatch(EmployeeActions.setSearchId({ searchId: id }));
+
+    if (!id) {
       this.loadEmployees();
+      return;
     }
+
+    this.store.dispatch(EmployeeActions.loadEmployeeById({ id }));
+  }
+
+  clearSearch(): void {
+    this.searchId.set('');
+    this.store.dispatch(EmployeeActions.setSearchId({ searchId: '' }));
+    this.loadEmployees();
   }
 
   onSearchKeydown(event: KeyboardEvent): void {
@@ -150,20 +124,26 @@ export class EmployeeList implements OnInit {
   }
 
   editEmployee(employee: Employee): void {
+    this.store.dispatch(EmployeeActions.selectEmployee({ id: employee.id }));
     this.snackBar.open(`Edit ${employee.name} is not available yet.`, 'Close', { duration: 3000 });
   }
 
   deleteEmployee(employee: Employee): void {
-    this.employeeService.deleteEmployee(employee.id).subscribe({
-      next: () => {
-        this.employees.update((list) => list.filter((item) => item.id !== employee.id));
-        this.snackBar.open(`${employee.name} was removed.`, 'Close', { duration: 3000 });
-      },
-      error: (error: Error) => {
-        this.snackBar.open(error.message || 'Failed to delete employee.', 'Close', {
-          duration: 4000,
-        });
-      },
-    });
+    const data: ConfirmDialogData = {
+      title: 'Delete employee',
+      message: `Are you sure you want to delete "${employee.name}" (ID ${employee.id})? This cannot be undone.`,
+      confirmLabel: 'Delete',
+      cancelLabel: 'Cancel',
+    };
+
+    this.dialog
+      .open(ConfirmDialog, { data, width: '400px' })
+      .afterClosed()
+      .pipe(filter((confirmed): confirmed is true => confirmed === true))
+      .subscribe(() => {
+        this.store.dispatch(
+          EmployeeActions.deleteEmployee({ id: employee.id, name: employee.name }),
+        );
+      });
   }
 }

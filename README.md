@@ -1,59 +1,55 @@
 # EmpManagement
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 22.2.0.
+Angular Employee Management app with a local Mock API (`json-server`) and NgRx state management.
 
-## Development server
+## Quick start
 
-To start a local development server, run:
-
-```bash
-ng serve
-```
-
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
-
-## Code scaffolding
-
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
+Install dependencies, then run the mock API and Angular app together:
 
 ```bash
-ng generate component component-name
+npm install
+npm start
 ```
 
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
+- App: http://localhost:4200/
+- Mock API: http://localhost:3000/api/v1
+
+### Run separately
 
 ```bash
-ng generate --help
+npm run api        # json-server on port 3000
+npm run start:web  # Angular on port 4200
 ```
+
+### Reset mock data
+
+Deletes/edits persist in `mock/db.json`. Restore the seed data with:
+
+```bash
+npm run api:reset
+```
+
+## Mock API endpoints
+
+| Method | URL |
+|--------|-----|
+| GET | `/api/v1/employee` |
+| GET | `/api/v1/employee/:id` |
+| POST | `/api/v1/employee` |
+| PUT | `/api/v1/employee/:id` |
+| DELETE | `/api/v1/employee/:id` |
+| GET | `/api/v1/country` |
+
+Data files live in `mock/db.json` (runtime) and `mock/db.seed.json` (reset source).
 
 ## Building
-
-To build the project run:
 
 ```bash
 ng build
 ```
 
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
-
 ## Running unit tests
-
-To execute unit tests with the [Vitest](https://vitest.dev/) test runner, use the following command:
 
 ```bash
 ng test
 ```
-
-## Running end-to-end tests
-
-For end-to-end (e2e) testing, run:
-
-```bash
-ng e2e
-```
-
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
-
-## Additional Resources
-
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.

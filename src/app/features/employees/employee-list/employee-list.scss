@@ -18,9 +18,17 @@ p {
   color: var(--mat-sys-on-surface-variant);
 }
 
+.search-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
 .search {
   width: min(100%, 320px);
-  margin-bottom: 16px;
+  margin-bottom: 0;
 }
 
 .table-scroll {
@@ -37,6 +45,10 @@ table {
 th,
 td {
   white-space: nowrap;
+}
+
+.mat-column-employeeId {
+  width: 72px;
 }
 
 .mat-column-actions {
