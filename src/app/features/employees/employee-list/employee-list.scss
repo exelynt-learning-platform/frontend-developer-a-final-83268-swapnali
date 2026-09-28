@@ -7,9 +7,14 @@
   margin-bottom: 16px;
 }
 
+.page-header-text {
+  min-width: 0;
+  flex: 1 1 220px;
+}
+
 h2 {
   margin: 0 0 4px;
-  font-size: 1.5rem;
+  font-size: clamp(1.25rem, 2.5vw, 1.5rem);
   font-weight: 500;
 }
 
@@ -27,19 +32,27 @@ p {
 }
 
 .search {
-  width: min(100%, 320px);
+  flex: 1 1 220px;
+  width: min(100%, 360px);
+  max-width: 100%;
   margin-bottom: 0;
+}
+
+.search-button,
+.add-button {
+  flex: 0 0 auto;
 }
 
 .table-scroll {
   overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
   border: 1px solid var(--mat-sys-outline-variant);
   border-radius: 12px;
 }
 
 table {
   width: 100%;
-  min-width: 760px;
+  min-width: 720px;
 }
 
 th,
@@ -58,6 +71,7 @@ td {
 .actions {
   display: flex;
   justify-content: flex-end;
+  gap: 4px;
 }
 
 .delete-button {
@@ -90,4 +104,106 @@ td {
 
 .state-error p {
   color: var(--mat-sys-error);
+  max-width: 36rem;
+}
+
+.card-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.employee-card {
+  padding: 16px;
+  border: 1px solid var(--mat-sys-outline-variant);
+  border-radius: 12px;
+  background: var(--mat-sys-surface);
+}
+
+.employee-card-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.employee-card h3 {
+  margin: 0;
+  font-size: 1.05rem;
+  font-weight: 500;
+  word-break: break-word;
+}
+
+.employee-id {
+  margin-top: 2px;
+  font-size: 0.875rem;
+}
+
+.employee-meta {
+  display: grid;
+  gap: 10px;
+  margin: 0;
+}
+
+.employee-meta div {
+  display: grid;
+  gap: 2px;
+}
+
+.employee-meta dt {
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  color: var(--mat-sys-on-surface-variant);
+}
+
+.employee-meta dd {
+  margin: 0;
+  word-break: break-word;
+}
+
+.desktop-only {
+  display: block;
+}
+
+.mobile-only {
+  display: none;
+}
+
+/* Phones */
+@media (max-width: 599px) {
+  .page-header {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .add-button,
+  .search-button {
+    width: 100%;
+  }
+
+  .search {
+    width: 100%;
+    flex-basis: 100%;
+  }
+
+  .desktop-only {
+    display: none;
+  }
+
+  .mobile-only {
+    display: flex;
+  }
+}
+
+/* Tablets */
+@media (min-width: 600px) and (max-width: 959px) {
+  .search {
+    width: min(100%, 280px);
+  }
+
+  table {
+    min-width: 640px;
+  }
 }

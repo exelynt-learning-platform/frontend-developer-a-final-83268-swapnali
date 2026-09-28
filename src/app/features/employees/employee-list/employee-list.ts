@@ -54,6 +54,8 @@ export class EmployeeList implements OnInit {
 
   /** Local input value — avoids fighting the store via [value] + async pipe. */
   readonly searchId = signal('');
+  /** Tracks in-flight delete so the matching row button can be disabled. */
+  readonly deletingId = signal<string | null>(null);
 
   readonly employees$ = this.store.select(selectFilteredEmployees);
   readonly loading$ = this.store.select(selectEmployeeLoading);
@@ -65,12 +67,14 @@ export class EmployeeList implements OnInit {
     this.actions$
       .pipe(ofType(EmployeeActions.deleteEmployeeSuccess), takeUntilDestroyed())
       .subscribe(({ name }) => {
+        this.deletingId.set(null);
         this.snackBar.open(`${name} was removed.`, 'Close', { duration: 3000 });
       });
 
     this.actions$
       .pipe(ofType(EmployeeActions.deleteEmployeeFailure), takeUntilDestroyed())
       .subscribe(({ error }) => {
+        this.deletingId.set(null);
         this.snackBar.open(error, 'Close', { duration: 4000 });
       });
   }
@@ -131,6 +135,10 @@ export class EmployeeList implements OnInit {
   }
 
   deleteEmployee(employee: Employee): void {
+    if (this.deletingId()) {
+      return;
+    }
+
     const data: ConfirmDialogData = {
       title: 'Delete employee',
       message: `Are you sure you want to delete "${employee.name}" (ID ${employee.id})? This cannot be undone.`,
@@ -139,10 +147,20 @@ export class EmployeeList implements OnInit {
     };
 
     this.dialog
-      .open(ConfirmDialog, { data, width: '400px' })
+      .open(ConfirmDialog, {
+        data,
+        width: '400px',
+        maxWidth: '92vw',
+        autoFocus: 'dialog',
+        restoreFocus: true,
+        role: 'alertdialog',
+        ariaLabelledBy: 'confirm-dialog-title',
+        ariaDescribedBy: 'confirm-dialog-message',
+      })
       .afterClosed()
       .pipe(filter((confirmed): confirmed is true => confirmed === true))
       .subscribe(() => {
+        this.deletingId.set(employee.id);
         this.store.dispatch(
           EmployeeActions.deleteEmployee({ id: employee.id, name: employee.name }),
         );

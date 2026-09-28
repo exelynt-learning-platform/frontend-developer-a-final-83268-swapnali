@@ -1,4 +1,10 @@
-<form class="employee-form" [formGroup]="form" (ngSubmit)="onSubmit()" novalidate>
+<form
+  class="employee-form"
+  [formGroup]="form"
+  (ngSubmit)="onSubmit()"
+  novalidate
+  aria-label="Employee form"
+>
   <div class="fields">
     <mat-form-field appearance="outline">
       <mat-label>Name</mat-label>

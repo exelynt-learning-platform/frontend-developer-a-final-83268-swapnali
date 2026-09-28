@@ -1,8 +1,8 @@
 <section class="page">
   <div class="page-header">
     <div>
-      <a mat-button type="button" routerLink="/employees">
-        <mat-icon>arrow_back</mat-icon>
+      <a mat-button type="button" routerLink="/employees" aria-label="Back to employee list">
+        <mat-icon aria-hidden="true">arrow_back</mat-icon>
         Back to list
       </a>
       <h2>{{ isEditMode() ? 'Edit Employee' : 'Add Employee' }}</h2>

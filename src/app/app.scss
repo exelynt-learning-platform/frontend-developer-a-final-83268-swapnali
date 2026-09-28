@@ -14,7 +14,7 @@
 
 h1 {
   margin: 0;
-  font-size: 1.25rem;
+  font-size: clamp(1.05rem, 2.5vw, 1.25rem);
   font-weight: 500;
   line-height: 1.2;
 }
@@ -23,12 +23,25 @@ main {
   flex: 1;
   width: min(1100px, 100%);
   margin: 0 auto;
-  padding: 16px;
+  padding: 12px;
   box-sizing: border-box;
 }
 
-@media (min-width: 768px) {
+@media (min-width: 600px) {
+  main {
+    padding: 20px;
+  }
+}
+
+@media (min-width: 960px) {
   main {
     padding: 24px;
   }
+}
+
+/* Visible keyboard focus for interactive controls */
+:host ::ng-deep a:focus-visible,
+:host ::ng-deep button:focus-visible {
+  outline: 2px solid var(--mat-sys-primary);
+  outline-offset: 2px;
 }
