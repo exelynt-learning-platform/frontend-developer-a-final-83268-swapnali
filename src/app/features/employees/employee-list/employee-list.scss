@@ -38,7 +38,6 @@ p {
   margin-bottom: 0;
 }
 
-.search-button,
 .add-button {
   flex: 0 0 auto;
 }
@@ -178,8 +177,7 @@ td {
     align-items: stretch;
   }
 
-  .add-button,
-  .search-button {
+  .add-button {
     width: 100%;
   }
 
